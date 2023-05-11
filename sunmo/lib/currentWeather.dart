@@ -1,4 +1,4 @@
-import 'dart:html';
+
 import 'dart:convert';
 import 'models/weather.dart';
 import 'package:http/http.dart' as http;
@@ -17,22 +17,21 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
       body: Center(
         child: FutureBuilder(
           builder: (context, snapshot) {
-            if (snapshot != null) {
+            if (snapshot.hasData) {
               Weather _weather = snapshot.data;
-              if (_weather == null) {
-                return Text("Error getting data from API");
-              } else {
+              if (_weather != null) {
                 return weatherBox(_weather);
-              }
-            } else {
-              return CircularProgressIndicator();
-            }
+              } 
+            } 
+            return CircularProgressIndicator();
           },
           future: getCurrentWeather(),
         ),
       ),
     );
   }
+}
+
 
   Widget weatherBox(Weather _weather) {
     return Column(children: <Widget>[
@@ -49,7 +48,7 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
     String city = "calgary";
     String apiKey = "230a8144b2272a1e71dc0aaa1cea83e7";
     var url =
-        "https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid=230a8144b2272a1e71dc0aaa1cea83e7";
+        "http://api.openweathermap.org/geo/1.0/reverse?lat=51.5098&lon=-0.1180&limit=5&appid=230a8144b2272a1e71dc0aaa1cea83e7";
 
     final response = await http.get(url as Uri);
 
@@ -60,4 +59,4 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
     }
     return weather;
   }
-}
+
