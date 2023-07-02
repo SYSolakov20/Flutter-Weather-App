@@ -40,19 +40,47 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
   }
 
   Widget weatherBox(Weather _weather) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text("${_weather.temp}"),
-          Text("${_weather.description}"),
-          Text("${_weather.feelsLike}"),
-          Text("${_weather.low}"),
-          Text("${_weather.high}"),
-        ],
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: <Widget>[
+      Align(
+        alignment: Alignment.topLeft,
+        child: Container(
+          margin: EdgeInsets.only(left: 20, top: 150),
+          child: Text(
+            "${_weather.description}",
+            style: TextStyle(fontSize: 17),
+          ),
+        ),
       ),
-    );
-  }
+      SizedBox(height: 20),
+      Align(
+        alignment: Alignment.centerRight,
+        child: Container(
+          margin:EdgeInsets.only(right: 15, top: 55),
+          child:Text(
+            ("${_weather.temp}°"),
+              style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Text("${_weather.feelsLike}"),
+      ),
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Text("${_weather.low}"),
+      ),
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Text("${_weather.high}"),
+      ),
+    ],
+  );
+}
+
+
 
   Future<Weather> getCurrentWeather() async {
     String apiKey = "230a8144b2272a1e71dc0aaa1cea83e7";
