@@ -1,11 +1,12 @@
-
 import 'dart:convert';
-import 'models/weather.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+
+import 'models/weather.dart';
 
 class CurrentWeatherPage extends StatefulWidget {
+  const CurrentWeatherPage({Key? key}) : super(key: key);
+
   @override
   _CurrentWeatherPageState createState() => _CurrentWeatherPageState();
 }
@@ -15,48 +16,57 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: FutureBuilder(
+        child: FutureBuilder<Weather>(
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              Weather _weather = snapshot.data;
-              if (_weather != null) {
-                return weatherBox(_weather);
-              } 
-            } 
-            return CircularProgressIndicator();
+              Weather _weather = snapshot.data!;
+              return weatherBox(_weather);
+            } else if (snapshot.hasError) {
+              return Text("Error fetching weather");
+            } else {
+              return CircularProgressIndicator(); // Show a loading indicator while fetching data
+            }
           },
           future: getCurrentWeather(),
         ),
       ),
     );
   }
-}
-
 
   Widget weatherBox(Weather _weather) {
-    return Column(children: <Widget>[
-      Text("${_weather.temp}"),
-      Text("${_weather.description}"),
-      Text("${_weather.feelsLike}"),
-      Text("${_weather.low}"),
-      Text("${_weather.high}"),
-    ]);
+    return Column(
+      children: <Widget>[
+        Text("${_weather.temp}"),
+        Text("${_weather.description}"),
+        Text("${_weather.feelsLike}"),
+        Text("${_weather.low}"),
+        Text("${_weather.high}"),
+      ],
+    );
   }
 
-  Future getCurrentWeather() async {
-    Weather weather;
-    String city = "calgary";
+  Future<Weather> getCurrentWeather() async {
     String apiKey = "230a8144b2272a1e71dc0aaa1cea83e7";
-    var url =
-        "http://api.openweathermap.org/geo/1.0/reverse?lat=51.5098&lon=-0.1180&limit=5&appid=230a8144b2272a1e71dc0aaa1cea83e7";
+    double latitude = 33.44;
+    double longitude = -94.04;
+    String exclude = "hourly,daily";
 
-    final response = await http.get(url as Uri);
+    var url = Uri.parse(
+        "https://api.openweathermap.org/data/2.5/weather?lat=42.510578&lon=-27.461014&exclude=hourly&appid=230a8144b2272a1e71dc0aaa1cea83e7");
+
+    final response = await http.get(url);
 
     if (response.statusCode == 200) {
-      weather = Weather.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to load weather');
-    }
-    return weather;
+  Map<String, dynamic> json = jsonDecode(response.body);
+  print(json); // Log the JSON response
+  Weather weather = Weather.fromJson(json);
+  print(weather); // Log the Weather object
+  return weather;
+} else {
+  print('Failed to load weather. Status code: ${response.statusCode}');
+  throw Exception('Failed to load weather');
+}
   }
+  
+}
 
