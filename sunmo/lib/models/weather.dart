@@ -6,6 +6,7 @@ class Weather {
   final String description;
   final double windSpeed;
   final double humidity;
+  final double pressure;
 
   Weather({
     required this.temp,
@@ -15,6 +16,7 @@ class Weather {
     required this.description,
     required this.windSpeed,
     required this.humidity,
+    required this.pressure,
   });
 
   factory Weather.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,7 @@ class Weather {
     double highKelvin = main['temp_max'].toDouble();
     double windSpeed = json['wind']['speed'].toDouble();
     double humidity = main['humidity'].toDouble();
+    double pressure = main['pressure'].toDouble();
 
     double tempCelsius = kelvinToCelsius(tempKelvin);
     double feelsLikeCelsius = kelvinToCelsius(feelsLikeKelvin);
@@ -46,6 +49,7 @@ class Weather {
       description: weather['description'],
       windSpeed: windSpeed,
       humidity: humidity,
+      pressure: pressure,
     );
   }
 }

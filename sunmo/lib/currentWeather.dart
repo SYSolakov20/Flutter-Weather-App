@@ -18,7 +18,7 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/background-worm.png'),
+            image: _getBackgroundImage(),
             fit: BoxFit.cover,
           ),
         ),
@@ -39,66 +39,74 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
     );
   }
 
-  Widget weatherBox(Weather _weather) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      Align(
-        alignment: Alignment.topLeft,
-        child: Container(
-          margin: EdgeInsets.only(left: 20, top: 150),
-          child: Text(
-            "${_weather.description}",
-            style: TextStyle(fontSize: 17),
-          ),
-        ),
-      ),
-      SizedBox(height: 20),
-      Align(
-        alignment: Alignment.centerRight,
-        child: Container(
-          margin:EdgeInsets.only(right: 15, top: 55),
-          child:Text(
-            ("${_weather.temp}°"),
-              style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
-     Align(
-        alignment: Alignment.centerRight,
-        child: Container(
-          margin:EdgeInsets.only(right: 45, top: 155),
-          child:Text(
-            ("${_weather.feelsLike}°"),
-              style: TextStyle(fontSize: 20),
-          ),
-        ),
-      ),
-      Align(
-        alignment: Alignment.centerRight,
-        child: Container(
-          margin:EdgeInsets.only(right: 45, top: 85),
-          child:Text(
-            ("${_weather.windSpeed} kt"),
-              style: TextStyle(fontSize: 20),
-          ),
-        ),
-      ),
-      Align(
-        alignment: Alignment.centerRight,
-        child: Container(
-          margin:EdgeInsets.only(right: 45, top: 85),
-          child:Text(
-            ("${_weather.humidity} kg"),
-              style: TextStyle(fontSize: 20),
-          ),
-        ),
-      ),
-    ],
-  );
+ImageProvider _getBackgroundImage() {
+  if (_weather != null && _weather!.temp < 20) {
+    return AssetImage('assets/images/background-cold.png');
+  } else {
+    return AssetImage('assets/images/background-worm.png');
+  }
 }
 
+  Widget weatherBox(Weather _weather) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Align(
+          alignment: Alignment.topLeft,
+          child: Container(
+            margin: EdgeInsets.only(left: 20, top: 150),
+            child: Text(
+              "${_weather.description}",
+              style: TextStyle(fontSize: 17),
+            ),
+          ),
+        ),
+        SizedBox(height: 20),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Container(
+            margin:EdgeInsets.only(right: 15, top: 55),
+            child:Text(
+              ("${_weather.temp}°"),
+              style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Container(
+            margin:EdgeInsets.only(right: 45, top: 155),
+            child:Text(
+              ("${_weather.pressure} Pa"),
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Container(
+            margin:EdgeInsets.only(right: 45, top: 85),
+            child:Text(
+              ("${_weather.windSpeed} kt"),
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Container(
+            margin:EdgeInsets.only(right: 45, top: 85),
+            child:Text(
+              ("${_weather.humidity} kg"),
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
+  Weather? _weather;
 
   Future<Weather> getCurrentWeather() async {
     String apiKey = "230a8144b2272a1e71dc0aaa1cea83e7";
@@ -107,13 +115,15 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
     String exclude = "hourly";
 
     var url = Uri.parse(
-        "https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&exclude=$exclude&appid=$apiKey");
+      "https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&exclude=$exclude&appid=$apiKey",
+    );
 
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
       Map<String, dynamic> json = jsonDecode(response.body);
       Weather weather = Weather.fromJson(json);
+      _weather = weather;
       return weather;
     } else {
       throw Exception('Failed to load weather');

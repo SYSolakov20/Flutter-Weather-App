@@ -58,6 +58,7 @@ flutter:
   uses-material-design: true
   assets:
       - assets/images/background-worm.png
+      - assets/images/background-cold.png
 
 
   # To add assets to your application, add an assets section, like this:
