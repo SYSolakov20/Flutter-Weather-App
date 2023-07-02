@@ -64,17 +64,35 @@ class _CurrentWeatherPageState extends State<CurrentWeatherPage> {
           ),
         ),
       ),
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: Text("${_weather.feelsLike}"),
+     Align(
+        alignment: Alignment.centerRight,
+        child: Container(
+          margin:EdgeInsets.only(right: 45, top: 155),
+          child:Text(
+            ("${_weather.feelsLike}°"),
+              style: TextStyle(fontSize: 20),
+          ),
+        ),
       ),
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: Text("${_weather.low}"),
+      Align(
+        alignment: Alignment.centerRight,
+        child: Container(
+          margin:EdgeInsets.only(right: 45, top: 85),
+          child:Text(
+            ("${_weather.windSpeed} kt"),
+              style: TextStyle(fontSize: 20),
+          ),
+        ),
       ),
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: Text("${_weather.high}"),
+      Align(
+        alignment: Alignment.centerRight,
+        child: Container(
+          margin:EdgeInsets.only(right: 45, top: 85),
+          child:Text(
+            ("${_weather.humidity} kg"),
+              style: TextStyle(fontSize: 20),
+          ),
+        ),
       ),
     ],
   );

@@ -4,19 +4,23 @@ class Weather {
   final double low;
   final double high;
   final String description;
+  final double windSpeed;
+  final double humidity;
 
-  Weather(
-      {required this.temp,
-      required this.feelsLike,
-      required this.low,
-      required this.high,
-      required this.description});
+  Weather({
+    required this.temp,
+    required this.feelsLike,
+    required this.low,
+    required this.high,
+    required this.description,
+    required this.windSpeed,
+    required this.humidity,
+  });
 
   factory Weather.fromJson(Map<String, dynamic> json) {
-
     double kelvinToCelsius(double kelvin) {
-    return kelvin - 273.15;
-  }
+      return kelvin - 273.15;
+    }
 
     Map<String, dynamic> main = json['main'];
     List<dynamic> weatherData = json['weather'];
@@ -26,6 +30,8 @@ class Weather {
     double feelsLikeKelvin = main['feels_like'].toDouble();
     double lowKelvin = main['temp_min'].toDouble();
     double highKelvin = main['temp_max'].toDouble();
+    double windSpeed = json['wind']['speed'].toDouble();
+    double humidity = main['humidity'].toDouble();
 
     double tempCelsius = kelvinToCelsius(tempKelvin);
     double feelsLikeCelsius = kelvinToCelsius(feelsLikeKelvin);
@@ -38,8 +44,8 @@ class Weather {
       low: double.parse(lowCelsius.toStringAsFixed(2)),
       high: double.parse(highCelsius.toStringAsFixed(2)),
       description: weather['description'],
+      windSpeed: windSpeed,
+      humidity: humidity,
     );
   }
-
-  
 }
