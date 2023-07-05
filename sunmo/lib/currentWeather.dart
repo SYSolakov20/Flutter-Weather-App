@@ -97,7 +97,7 @@ ImageProvider _getBackgroundImage() {
           child: Container(
             margin:EdgeInsets.only(right: 45, top: 85),
             child:Text(
-              ("${_weather.humidity} kg"),
+              ("${_weather.humidity} g.m"),
               style: TextStyle(fontSize: 20),
             ),
           ),
